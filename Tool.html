@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Length Converter - Global Unit Tool</title>
+    
+    <!-- SEO & Metadata -->
+    <meta name="description" content="A clean, easy-to-use, and comprehensive length unit converter supporting Metric, Imperial, and Astronomical units globally. Convert Kilometers, Miles, Feet, Light-Years, and more instantly with search functionality.">
+    <meta name="keywords" content="length converter, unit converter, distance converter, metric, imperial, kilometer, mile, foot, light year, parsec, 길이 변환기, 단위 변환, 단위 검색">
+    
+    <!-- Canonical URL (Placeholder for SEO best practice) -->
+    <link rel="canonical" href="https://yourdomain.com/length-converter">
+    
+    <!-- Open Graph (OG) Tags for Social Sharing (KOREAN DEFAULTS) -->
+    <meta property="og:title" content="길이 변환기 - 글로벌 단위 툴">
+    <meta property="og:description" content="미터, 마일, 광년 등 다양한 단위를 실시간으로 변환하는 깨끗하고 포괄적인 길이 단위 변환기입니다.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourdomain.com/length-converter">
+    <!-- Placeholder image URL for social previews -->
+    <meta property="og:image" content="https://placehold.co/1200x630/3B82F6/FFFFFF?text=Length+Converter"> 
+    <meta property="og:locale" content="ko_KR">
+    
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="길이 변환기 - 글로벌 단위 툴">
+    <meta name="twitter:description" content="미터, 마일, 광년 등 다양한 단위를 실시간으로 변환하는 깨끗하고 포괄적인 길이 단위 변환기입니다.">
+    <meta name="twitter:image" content="https://placehold.co/1200x630/3B82F6/FFFFFF?text=Length+Converter">
+    
+    <!-- Pretendard Font - for Korean and Latin characters -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <style>
+        /* Base styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Pretendard', sans-serif; 
+            background-color: #ffffff; 
+            min-height: 100vh;
+        }
+
+        /* Header styles */
+        .header {
+            width: 100%;
+            height: 60px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            position: fixed; /* 헤더 고정 */
+            top: 0; 
+            z-index: 1000; 
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        /* Logo styles */
+        .header-logo {
+            height: 28px;
+            flex-shrink: 0; 
+            margin-right: 20px;
+        }
+
+        /* Header text styles (dynamic title) */
+        .header-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333333;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap; 
+        }
+
+        /* Main content area (Two-Column Layout Container) */
+        .main-content {
+            padding: 100px 20px 40px 20px; /* 고정 헤더 높이 보정 */
+            display: flex; 
+            justify-content: center;
+            align-items: flex-start;
+            max-width: 900px; /* 변경: 전체 컨테이너 폭을 1100px에서 900px로 줄여 중앙 집중도를 높임 */
+            margin: 0 auto; 
+            gap: 40px; /* 변경: 두 컬럼 사이에 40px 간격 추가 */
+        }
+        
+        /* Converter card styles (Left Column) */
+        .converter-card {
+            background-color: white;
+            padding: 30px 0; /* 변경: 불필요한 좌우 패딩 제거 */ 
+            border: none; 
+            width: 100%;
+            max-width: 450px; 
+            flex-shrink: 0;
+        }
+
+        /* Formula card styles (Right Column) */
+        .formula-card {
+            background-color: white;
+            padding: 30px 0 30px 0; /* 변경: 불필요한 좌우 패딩과 border-left 제거 */ 
+            border: none; 
+            border-left: none; /* 변경: 중앙 구분선 제거 */
+            width: 100%;
+            flex-grow: 1; 
+            min-height: 250px; 
+            max-width: 600px; 
+        }
+
+        /* Input group styles */
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Input fields styles */
+        input[type="number"], .unit-select-container input[type="text"] {
+            padding: 14px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px; 
+            font-size: 17px;
+            box-sizing: border-box;
+            font-family: 'Pretendard', sans-serif;
+            transition: border-color 0.2s;
+            background-color: white;
+            flex-grow: 1;
+        }
+
+        /* Number input field */
+        input[type="number"] {
+            flex-grow: 1;
+            width: auto;
+        }
+
+        /* Readonly input field (Result) */
+        input[readonly] {
+            background-color: #f7f7f7; 
+            color: #1e1e1e;
+            font-weight: 600;
+            border-style: solid; 
+            border-color: #e0e0e0;
+            cursor: default;
+        }
+        
+        /* Focus styles */
+        input[type="number"]:focus, .unit-select-container input[type="text"]:focus {
+            border-color: #3B82F6; 
+            outline: none;
+            box-shadow: none; 
+        }
+
+        /* Custom unit selector styles */
+        .unit-select-container {
+            position: relative;
+            width: 150px;
+            flex-shrink: 0;
+        }
+        
+        .unit-select-container input[type="text"] {
+            width: 100%;
+            cursor: pointer;
+            text-align: left;
+            flex-grow: 0;
+        }
+
+        .unit-selector-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 10;
+            width: 250px; 
+            max-height: 250px;
+            overflow-y: auto;
+            background-color: white;
+            border: 1px solid #e0e0e0; 
+            box-shadow: none; 
+            display: none; 
+            margin-top: 8px; 
+        }
+
+        .unit-selector-list.visible {
+            display: block;
+        }
+
+        .unit-option {
+            padding: 12px 15px;
+            cursor: pointer;
+            font-size: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.1s;
+        }
+
+        .unit-option:last-child {
+            border-bottom: none;
+        }
+
+        .unit-option:hover {
+            background-color: #EBF8FF; 
+        }
+
+        .unit-symbol {
+            font-weight: 600;
+            color: #3B82F6;
+            margin-left: 8px;
+        }
+        
+        /* Swap button styles */
+        .swap-section {
+            display: flex;
+            justify-content: center;
+            margin: -5px 0 15px 0;
+        }
+
+        #swap-button {
+            background: #f0f0f0; 
+            border: 1px solid #e0e0e0;
+            color: #555;
+            font-size: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: none; 
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #swap-button:hover {
+            background-color: #e5e5e5; 
+            color: #3B82F6;
+            border-color: #3B82F6;
+            transform: none; 
+        }
+        
+        /* Formula Section - now inside formula-card */
+        .formula-box {
+            background-color: white; 
+            padding: 15px;
+            border-radius: 6px;
+            font-family: serif;
+            font-size: 15px;
+            color: #1F2937;
+            overflow-x: auto;
+            line-height: 1.5;
+            text-align: left;
+            border: 1px solid #e0e0e0; 
+            min-height: 100px; /* 최소 높이 조정 */
+            margin-bottom: 10px; /* 여백 감소: 25px -> 10px */
+        }
+        
+        .formula-box .mjx-chtml {
+            text-align: left;
+        }
+        
+        /* Unit Conversion Rate Display */
+        #conversion-rate-container {
+            margin-top: 0px; /* 여백 제거: 공식 박스 바로 아래로 이동 */
+        }
+        
+        /* Ad Box styles */
+        .ad-box-container {
+            margin-top: 25px;
+            max-width: 100%; 
+        }
+
+        .ad-box {
+            background-color: #FFFBEB; /* Light yellow background to denote advertising */
+            border: 1px dashed #FCD34D; /* Dashed orange border */
+            padding: 20px;
+            border-radius: 6px;
+            text-align: center;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .ad-text {
+            color: #D97706; /* Darker text for readability */
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+
+        /* Mobile responsive design: stack columns vertically below 950px */
+        @media (max-width: 950px) { 
+            .main-content {
+                flex-direction: column; 
+                align-items: center;
+                max-width: 450px; 
+                padding-top: 80px; 
+                gap: 0; /* 모바일에서는 간격 제거 */
+            }
+            .converter-card {
+                padding: 0 0 20px 0; 
+                max-width: 100%;
+                width: 100%;
+            }
+            .formula-card {
+                padding: 20px 0 0 0; 
+                max-width: 100%;
+                width: 100%;
+                border-left: none; 
+                border-top: 1px solid #e0e0e0; 
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .header {
+                height: 50px;
+            }
+            .main-content {
+                padding: 70px 10px 20px 10px;
+            }
+            .input-row {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .unit-select-container {
+                width: 100%;
+            }
+            .unit-selector-list {
+                width: 100%;
+            }
+             .ad-box-container {
+                margin-top: 15px; /* Reduce top margin on mobile */
+            }
+        }
+    </style>
+    <!-- MathJax for rendering LaTeX formulas -->
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+    <!-- Header area -->
+    <header class="header">
+        <!-- Logo image -->
+        <img src="https://i.postimg.cc/GtQg5mZy/jemogeul-iblyeoghaejuseyo-1.png" alt="Logo" class="header-logo">
+        
+        <!-- Dynamic title text -->
+        <span class="header-text" id="app-title"></span>
+
+        <!-- Dummy space for centering -->
+        <div style="width: 28px; height: 1px;"></div> 
+
+    </header>
+
+    <!-- Main content (Two-Column Layout) -->
+    <div class="main-content">
+        
+        <!-- LEFT COLUMN: Length Converter Inputs (converter-card) -->
+        <div class="converter-card">
+            
+            <div class="input-group">
+                <label id="label-input-value" for="input-value"></label>
+                <div class="input-row">
+                    <input type="number" id="input-value" value="1" min="0" step="any" oninput="convert()">
+                    
+                    <!-- Custom unit selector - Input -->
+                    <div class="unit-select-container">
+                        <input type="text" class="unit-display-input" id="input-unit-display" placeholder="" onfocus="openUnitSelector('input')" oninput="filterUnits('input', this.value)" autocomplete="off">
+                        <input type="hidden" id="input-unit" value="km">
+                        <div class="unit-selector-list" id="input-unit-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Swap button -->
+            <div class="swap-section">
+                <button id="swap-button" onclick="swapUnits()" title="Swap Units">&#x21C5;</button> 
+            </div>
+
+            <div class="input-group">
+                <label id="label-output-value" for="output-unit"></label>
+                <div class="input-row">
+                    <!-- Result is read-only -->
+                    <input type="number" id="output-value" readonly>
+                    
+                    <!-- Custom unit selector - Output -->
+                    <div class="unit-select-container">
+                        <input type="text" class="unit-display-input" id="output-unit-display" placeholder="" onfocus="openUnitSelector('output')" oninput="filterUnits('output', this.value)" autocomplete="off">
+                        <input type="hidden" id="output-unit" value="mi">
+                        <div class="unit-selector-list" id="output-unit-list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- RIGHT COLUMN: Formula & Rate Display (formula-card) -->
+        <div class="formula-card">
+            <!-- 1. Formula Display and Toggle -->
+            <div class="mb-2" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <h3 id="formula-title" style="font-size:14px; font-weight:600; color:#6B7280;">Conversion Formula</h3>
+                <button id="toggle-formula-btn" onclick="toggleFormulaDisplay()" style="font-size:12px; color:#3B82F6; font-weight:500; background:none; border:none; cursor:pointer;">
+                    Hide Formula
+                </button>
+            </div>
+            <div id="formula-display" class="formula-box" style="display:block;">
+                <!-- Formula will be injected here (using LaTeX) -->
+                $$ \text{Value}_{\text{B}} = \text{Value}_{\text{A}} \times \frac{\text{Factor}_{\text{A}}}{\text{Factor}_{\text{B}}} $$
+            </div>
+
+            <!-- 2. Unit Conversion Rate Display -->
+            <div id="conversion-rate-container">
+                <h4 id="rate-title" style="font-size:14px; font-weight:600; color:#6B7280; margin-bottom: 8px;">Unit Conversion Rate</h4>
+                <div id="conversion-rate-display" style="font-size: 16px; font-weight: 500; color: #333; padding: 12px 15px; background-color: #f7f7f7; border-radius: 6px; border: 1px solid #e0e0e0;">
+                    <!-- 1 km = 0.621371 mi will be injected here -->
+                    <span id="conversion-rate-text">1 km = 0.6213713713 mi</span>
+                </div>
+            </div>
+            
+            <!-- 3. Advertisement Placeholder -->
+            <div id="ad-placeholder" class="ad-box-container">
+                <h4 style="font-size:14px; font-weight:600; color:#6B7280; margin-bottom: 8px;">Advertisement</h4>
+                <div class="ad-box">
+                    <!-- Replace this content with actual ad script (e.g., Google AdSense) -->
+                    <p class="ad-text">
+                        [여기에 광고 배너가 표시됩니다.]
+                        <br>
+                        <span style="font-size: 11px; color: #9CA3AF;">광고 ID: 728x90 Banner Slot</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- Localization (i18n) Data ---
+        const i18n = {
+            'ko': {
+                'title': '길이 변환기',
+                'page_title': '길이 변환기 - 글로벌 단위 툴',
+                'input_label': '변환할 값',
+                'output_label': '변환될 값',
+                'search_placeholder': '단위 검색 (이름 또는 기호)',
+                'swap_title': '단위 교환',
+                'formula_title': '변환 공식',
+                'formula_toggle_hide': '공식 숨기기',
+                'formula_toggle_show': '공식 표시',
+                'unit_rate_title': '단위 변환 비율', 
+                'units': {
+                    'm': '미터', 'km': '킬로미터', 'cm': '센티미터', 'mm': '밀리미터', 'µm': '마이크로미터', 'nm': '나노미터', 'pm': '피코미터',
+                    'mi': '마일', 'yd': '야드', 'ft': '피트', 'in': '인치', 'furlong': '펄롱', 'chain': '체인',
+                    'li': '리 (里)', 'cheok': '척 (尺)',
+                    'nmi': '해리', 'ly': '광년', 'pc': '파섹', 'au': '천문단위', 'A': '옹스트롬', 'cubit': '큐빗'
+                }
+            },
+            'en': {
+                'title': 'Length Converter',
+                'page_title': 'Length Converter - Global Unit Tool',
+                'input_label': 'Input Value',
+                'output_label': 'Converted Value',
+                'search_placeholder': 'Search Unit (Name or Symbol)',
+                'swap_title': 'Swap Units',
+                'formula_title': 'Conversion Formula',
+                'formula_toggle_hide': 'Hide Formula',
+                'formula_toggle_show': 'Show Formula',
+                'unit_rate_title': 'Unit Conversion Rate', 
+                'units': {
+                    'm': 'Meter', 'km': 'Kilometer', 'cm': 'Centimeter', 'mm': 'Millimeter', 'µm': 'Micrometer', 'nm': 'Nanometer', 'pm': 'Picometer',
+                    'mi': 'Mile', 'yd': 'Yard', 'ft': 'Foot', 'in': 'Inch', 'furlong': 'Furlong', 'chain': 'Chain',
+                    'li': 'Ri (里)', 'cheok': 'Cheok (尺)',
+                    'nmi': 'Nautical Mile', 'ly': 'Light-Year', 'pc': 'Parsec', 'au': 'Astronomical Unit', 'A': 'Angstrom', 'cubit': 'Cubit'
+                }
+            }
+        };
+
+        // --- Core Unit Conversion Factors (based on Meter) ---
+        const UNIT_CONVERSIONS = {
+            'm': { factor: 1 }, 'km': { factor: 1000 }, 'cm': { factor: 0.01 }, 'mm': { factor: 0.001 },
+            'µm': { factor: 1e-6 }, 'nm': { factor: 1e-9 }, 'pm': { factor: 1e-12 },
+            'mi': { factor: 1609.344 }, 'yd': { factor: 0.9144 }, 'ft': { factor: 0.3048 }, 'in': { factor: 0.0254 },
+            'furlong': { factor: 201.168 }, 'chain': { factor: 20.1168 },
+            'li': { factor: 392.727 }, 'cheok': { factor: 0.30303 },
+            'nmi': { factor: 1852 }, 'ly': { factor: 9.4607304725808e+15 }, 
+            'pc': { factor: 3.08567758149e+16 }, 
+            'au': { factor: 1.495978707e+11 }, 'A': { factor: 1e-10 }, 'cubit': { factor: 0.4572 },
+        };
+
+        // --- Global State ---
+        let currentLang = 'en'; // Default to English
+        const SUPPORTED_LANGS = Object.keys(i18n);
+        let isFormulaVisible = true; // State for formula toggle
+
+        // --- DOM Element References ---
+        const htmlElement = document.documentElement;
+        const inputDisplay = document.getElementById('input-unit-display');
+        const outputDisplay = document.getElementById('output-unit-display');
+        const inputHidden = document.getElementById('input-unit');
+        const outputHidden = document.getElementById('output-unit');
+        const inputList = document.getElementById('input-unit-list');
+        const outputList = document.getElementById('output-unit-list');
+        const inputValue = document.getElementById('input-value');
+        const outputValue = document.getElementById('output-value');
+        const formulaDisplay = document.getElementById('formula-display');
+        const formulaToggleButton = document.getElementById('toggle-formula-btn');
+        const rateTitle = document.getElementById('rate-title'); 
+        const conversionRateText = document.getElementById('conversion-rate-text'); 
+
+
+        /**
+         * Determines the language based on the browser setting.
+         * @returns {string} The determined language code ('en' or 'ko').
+         */
+        function getLanguage() {
+            const browserLang = navigator.language.split('-')[0].toLowerCase();
+            if (SUPPORTED_LANGS.includes(browserLang)) {
+                return browserLang;
+            }
+            return 'en'; // Default
+        }
+
+        /**
+         * Translates UI elements based on the current language.
+         */
+        function translateUI() {
+            const translations = i18n[currentLang];
+            
+            // HTML lang attribute
+            htmlElement.setAttribute('lang', currentLang);
+            
+            // Header and Title
+            document.getElementById('page-title').textContent = translations.page_title;
+            document.getElementById('app-title').textContent = translations.title;
+
+            // Labels
+            document.getElementById('label-input-value').textContent = translations.input_label;
+            document.getElementById('label-output-value').textContent = translations.output_label;
+
+            // Placeholders and Titles
+            const placeholderText = translations.search_placeholder;
+            inputDisplay.placeholder = placeholderText;
+            outputDisplay.placeholder = placeholderText;
+            document.getElementById('swap-button').title = translations.swap_title;
+            
+            // Formula Title and Toggle Button
+            document.getElementById('formula-title').textContent = translations.formula_title;
+            rateTitle.textContent = translations.unit_rate_title; 
+            
+            formulaToggleButton.textContent = isFormulaVisible 
+                ? translations.formula_toggle_hide
+                : translations.formula_toggle_show;
+
+
+            // Repopulate units with new language names
+            populateUnits();
+            
+            // Re-run conversion to update the formula display content and rate in the new language
+            convert();
+        }
+
+        /**
+         * Generates the HTML for a unit option using the current language.
+         * @param {string} key - Unit symbol key (e.g., 'km').
+         * @returns {string} HTML string for the unit option.
+         */
+        function generateUnitOptionHTML(key) {
+            const unitName = i18n[currentLang].units[key];
+            return `<div class="unit-option" data-unit-key="${key}">
+                        ${unitName} <span class="unit-symbol">(${key})</span>
+                    </div>`;
+        }
+
+        /**
+         * Populates the unit selector lists and sets initial display values.
+         */
+        function populateUnits() {
+            // Get all unit keys
+            const unitKeys = Object.keys(UNIT_CONVERSIONS);
+
+            // Generate HTML for all units
+            const unitsHtml = unitKeys.map(key => generateUnitOptionHTML(key)).join('');
+
+            inputList.innerHTML = unitsHtml;
+            outputList.innerHTML = unitsHtml;
+
+            // Update initial display names after language change
+            setUnit('input', inputHidden.value);
+            setUnit('output', outputHidden.value);
+        }
+
+        /**
+         * Sets the unit for the specified type (input/output) and updates the UI.
+         * @param {string} type - 'input' or 'output'
+         * @param {string} key - Unit symbol key (e.g., 'km').
+         */
+        function setUnit(type, key) {
+            const unitName = i18n[currentLang].units[key];
+            if (!unitName) return;
+
+            const displayElement = type === 'input' ? inputDisplay : outputDisplay;
+            const hiddenElement = type === 'input' ? inputHidden : outputHidden;
+            const listElement = type === 'input' ? inputList : outputList;
+
+            // 1. Update the display and hidden input
+            displayElement.value = unitName + ' (' + key + ')';
+            hiddenElement.value = key;
+            
+            // 2. Perform conversion first
+            convert();
+
+            // 3. Hide the list (Crucial for closing the dropdown)
+            listElement.classList.remove('visible');
+        }
+
+        /**
+         * Opens the unit selector list and clears the search box.
+         * @param {string} type - 'input' or 'output'
+         */
+        function openUnitSelector(type) {
+            const listElement = type === 'input' ? inputList : outputList;
+            const otherListElement = type === 'input' ? outputList : inputList;
+
+            filterUnits(type, ''); // Show all units
+            
+            listElement.classList.add('visible');
+            otherListElement.classList.remove('visible');
+
+            // Clear display text to enable immediate search
+            const displayElement = type === 'input' ? inputDisplay : outputDisplay;
+            // Select the existing text to make it easy for the user to delete/type
+            setTimeout(() => {
+                displayElement.select();
+            }, 0); 
+        }
+
+        /**
+         * Filters the unit list based on the search query.
+         * @param {string} type - 'input' or 'output'
+         * @param {string} query - Search query.
+         */
+        function filterUnits(type, query) {
+            const listElement = type === 'input' ? inputList : outputList;
+            const options = listElement.querySelectorAll('.unit-option');
+            const lowerCaseQuery = query.toLowerCase().trim();
+
+            options.forEach(option => {
+                // Search against translated name and symbol
+                const text = option.textContent.toLowerCase();
+                if (text.includes(lowerCaseQuery)) {
+                    option.style.display = '';
+                } else {
+                    option.style.display = 'none';
+                }
+            });
+            listElement.classList.add('visible');
+        }
+
+        /**
+         * Handles the click on a unit option.
+         * @param {Event} event 
+         */
+        function handleUnitOptionClick(event) {
+            let target = event.target;
+            
+            // Find the parent unit-option element
+            while (target && !target.classList.contains('unit-option')) {
+                target = target.parentElement;
+            }
+
+            if (!target) return;
+            
+            const key = target.dataset.unitKey;
+            let type = null;
+
+            if (target.closest('#input-unit-list')) {
+                type = 'input';
+            } else if (target.closest('#output-unit-list')) {
+                type = 'output';
+            }
+
+            if (type && key) {
+                // 1. Stop the event from bubbling up to the document's general click-outside handler
+                event.stopPropagation();
+                
+                // 2. Set the unit, which also calls convert() and closes the list
+                setUnit(type, key);
+                
+                // 3. Restore the focus to the main input field for convenience
+                inputValue.focus();
+            }
+        }
+        
+        /**
+         * Swaps the input and output units.
+         */
+        function swapUnits() {
+            const inputKey = inputHidden.value;
+            const outputKey = outputHidden.value;
+
+            setUnit('input', outputKey);
+            setUnit('output', inputKey);
+
+            convert();
+        }
+
+        /**
+         * Generates the conversion formula string using LaTeX notation. (Simplified to one clear formula)
+         * @param {string} fromKey - Source unit key.
+         * @param {string} toKey - Target unit key.
+         * @returns {string} LaTeX-formatted formula string.
+         */
+        function generateFormula(fromKey, toKey) {
+            const formulaText = `$$ \\text{Value}_{\\text{${toKey}}} = \\text{Value}_{\\text{${fromKey}}} \\times \\left( \\frac{\\text{Base Factor}_{\\text{${fromKey}}}}{\\text{Base Factor}_{\\text{${toKey}}}} \\right) $$`;
+            
+            // Force MathJax to re-render
+            if (window.MathJax) {
+                formulaDisplay.innerHTML = formulaText;
+                if (MathJax.startup && MathJax.startup.promise) {
+                    MathJax.startup.promise.then(() => {
+                        MathJax.typeset([formulaDisplay]);
+                    }).catch(err => console.error("MathJax startup error:", err));
+                } else {
+                    MathJax.typeset([formulaDisplay]);
+                }
+            } else {
+                 // Fallback for non-MathJax environment
+                formulaDisplay.innerHTML = `<p>Output Value = Input Value * (Factor in Meters for ${fromKey} / Factor in Meters for ${toKey})</p>`;
+            }
+        }
+
+        /**
+         * Converts the length unit and displays the result and the 1-unit rate.
+         */
+        function convert() {
+            const inputVal = parseFloat(inputValue.value);
+            const fromUnitKey = inputHidden.value;
+            const toUnitKey = outputHidden.value;
+
+            // Input validation
+            if (isNaN(inputVal) || inputVal < 0) {
+                outputValue.value = '0.0000';
+                formulaDisplay.innerHTML = '$$ \\text{Enter a valid input value.} $$';
+                conversionRateText.textContent = `1 ${fromUnitKey} = 0 ${toUnitKey}`;
+                return;
+            }
+
+            const fromFactor = UNIT_CONVERSIONS[fromUnitKey].factor;
+            const toFactor = UNIT_CONVERSIONS[toUnitKey].factor;
+
+            // Conversion logic: Value * (Factor_From / Factor_To)
+            const conversionRate = fromFactor / toFactor;
+            const outputResult = inputVal * conversionRate;
+
+            // --- 1. Display Result ---
+            if (outputResult === 0) {
+                outputValue.value = '0';
+            } else if (Math.abs(outputResult) >= 1e12 || Math.abs(outputResult) <= 1e-12) {
+                // Very large or very small numbers
+                outputValue.value = outputResult.toExponential(6);
+            } else if (Math.abs(outputResult) >= 1e6 || Math.abs(outputResult) < 1e-4) {
+                // Mid-range large/small numbers
+                outputValue.value = outputResult.toExponential(4);
+            } else {
+                // General numbers
+                outputValue.value = outputResult.toFixed(4);
+            }
+
+            // --- 2. Update 1-Unit Conversion Rate ---
+            let formattedRate;
+            
+            if (conversionRate === 1) {
+                formattedRate = '1';
+            } else if (Math.abs(conversionRate) >= 1e12 || Math.abs(conversionRate) <= 1e-12) {
+                formattedRate = conversionRate.toExponential(10); 
+            } else if (Math.abs(conversionRate) >= 1e6 || Math.abs(conversionRate) < 1e-4) {
+                formattedRate = conversionRate.toExponential(8); 
+            } else {
+                // Use maximum possible fixed precision for the rate display and clean trailing zeros
+                formattedRate = conversionRate.toFixed(10).replace(/(\.0+|0+)$/, ''); 
+                if (formattedRate.endsWith('.')) formattedRate = formattedRate.slice(0, -1);
+            }
+
+            conversionRateText.textContent = `1 ${fromUnitKey} = ${formattedRate} ${toUnitKey}`;
+
+
+            // --- 3. Update formula display ---
+            if (isFormulaVisible) {
+                generateFormula(fromUnitKey, toUnitKey);
+            } else {
+                formulaDisplay.innerHTML = '';
+            }
+        }
+        
+        /**
+         * Toggles the visibility of the formula display.
+         */
+        function toggleFormulaDisplay() {
+            isFormulaVisible = !isFormulaVisible;
+            
+            const translations = i18n[currentLang];
+            
+            if (isFormulaVisible) {
+                formulaDisplay.style.display = 'block';
+                formulaToggleButton.textContent = translations.formula_toggle_hide;
+                convert(); // Update and show formula content
+            } else {
+                formulaDisplay.style.display = 'none';
+                formulaToggleButton.textContent = translations.formula_toggle_show;
+            }
+        }
+
+
+        // --- Initialization on Page Load ---
+        window.onload = function() {
+            // 1. Set the initial language
+            currentLang = getLanguage();
+            
+            // 2. Translate UI elements
+            translateUI();
+            
+            // 3. Set up event listeners for unit selection
+            inputList.addEventListener('click', handleUnitOptionClick);
+            outputList.addEventListener('click', handleUnitOptionClick);
+
+            
+            // Close unit list when clicking outside the unit select container
+            document.addEventListener('click', function(e) {
+                const isClickInsideUnitSelector = e.target.closest('.unit-select-container');
+                const isSwapButton = e.target.closest('#swap-button');
+                
+                // If the click is NOT inside a unit selector OR the swap button area
+                if (!isClickInsideUnitSelector && !isSwapButton) {
+                    setUnit('input', inputHidden.value);
+                    setUnit('output', outputHidden.value);
+                }
+            });
+
+            // Prevent onfocus from immediately triggering if the user is just clicking inside to search
+            inputDisplay.addEventListener('click', function(e) { e.stopPropagation(); });
+            outputDisplay.addEventListener('click', function(e) { e.stopPropagation(); });
+        };
+
+    </script>
+</body>
+</html>
