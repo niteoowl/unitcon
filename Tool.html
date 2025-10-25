@@ -72,21 +72,42 @@
             white-space: nowrap; 
         }
 
+        /* Top Ad Container */
+        #top-ad-banner-container {
+            /* 헤더(60px) 아래에 위치시키기 위해 상단 패딩 설정 */
+            padding: 75px 20px 20px 20px; 
+            display: flex;
+            justify-content: center;
+            /* 메인 콘텐츠와 동일하게 최대 너비 900px 설정 */
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
         /* Main content area (Two-Column Layout Container) */
         .main-content {
-            padding: 100px 20px 40px 20px; /* 고정 헤더 높이 보정 */
+            /* Top Ad가 이미 공간을 차지했으므로, 상단 패딩 제거 */
+            padding: 0 20px 40px 20px; 
             display: flex; 
             justify-content: center;
             align-items: flex-start;
-            max-width: 900px; /* 변경: 전체 컨테이너 폭을 1100px에서 900px로 줄여 중앙 집중도를 높임 */
+            max-width: 900px; 
             margin: 0 auto; 
-            gap: 40px; /* 변경: 두 컬럼 사이에 40px 간격 추가 */
+            gap: 40px; /* 두 컬럼 사이에 40px 간격 추가 */
         }
         
+        /* Custom Separator Style for Desktop */
+        .separator-line {
+            width: 1px;
+            height: 300px; 
+            background-color: #e0e0e0;
+            flex-shrink: 0; 
+            margin-top: 20px; 
+        }
+
         /* Converter card styles (Left Column) */
         .converter-card {
             background-color: white;
-            padding: 30px 0; /* 변경: 불필요한 좌우 패딩 제거 */ 
+            padding: 30px 0; 
             border: none; 
             width: 100%;
             max-width: 450px; 
@@ -96,9 +117,9 @@
         /* Formula card styles (Right Column) */
         .formula-card {
             background-color: white;
-            padding: 30px 0 30px 0; /* 변경: 불필요한 좌우 패딩과 border-left 제거 */ 
+            padding: 30px 0 30px 0; 
             border: none; 
-            border-left: none; /* 변경: 중앙 구분선 제거 */
+            border-left: none; 
             width: 100%;
             flex-grow: 1; 
             min-height: 250px; 
@@ -256,8 +277,8 @@
             line-height: 1.5;
             text-align: left;
             border: 1px solid #e0e0e0; 
-            min-height: 100px; /* 최소 높이 조정 */
-            margin-bottom: 10px; /* 여백 감소: 25px -> 10px */
+            min-height: 100px; 
+            margin-bottom: 10px; 
         }
         
         .formula-box .mjx-chtml {
@@ -266,26 +287,22 @@
         
         /* Unit Conversion Rate Display */
         #conversion-rate-container {
-            margin-top: 0px; /* 여백 제거: 공식 박스 바로 아래로 이동 */
+            margin-top: 0px; 
         }
         
-        /* Ad Box styles */
-        .ad-box-container {
-            margin-top: 25px;
-            max-width: 100%; 
-        }
-
+        /* Ad Box styles (Applied to the single top banner) */
         .ad-box {
             background-color: #FFFBEB; /* Light yellow background to denote advertising */
             border: 1px dashed #FCD34D; /* Dashed orange border */
             padding: 20px;
             border-radius: 6px;
             text-align: center;
-            min-height: 90px;
+            min-height: 90px; /* Ensure minimum height */
             display: flex;
             align-items: center;
             justify-content: center;
             box-sizing: border-box;
+            width: 100%; /* Take full width of its container (900px max) */
         }
 
         .ad-text {
@@ -297,12 +314,18 @@
 
         /* Mobile responsive design: stack columns vertically below 950px */
         @media (max-width: 950px) { 
+            /* Top Ad Banner */
+            #top-ad-banner-container {
+                padding: 65px 10px 15px 10px; /* Reduced padding for mobile, clears 60px header */
+            }
+            
+            /* Main Content */
             .main-content {
                 flex-direction: column; 
                 align-items: center;
                 max-width: 450px; 
-                padding-top: 80px; 
-                gap: 0; /* 모바일에서는 간격 제거 */
+                padding: 0 10px 20px 10px; /* Removed top padding */
+                gap: 0; 
             }
             .converter-card {
                 padding: 0 0 20px 0; 
@@ -313,8 +336,10 @@
                 padding: 20px 0 0 0; 
                 max-width: 100%;
                 width: 100%;
-                border-left: none; 
                 border-top: 1px solid #e0e0e0; 
+            }
+            .separator-line {
+                display: none; 
             }
         }
         
@@ -322,21 +347,9 @@
             .header {
                 height: 50px;
             }
-            .main-content {
-                padding: 70px 10px 20px 10px;
-            }
-            .input-row {
-                flex-direction: column;
-                gap: 12px;
-            }
-            .unit-select-container {
-                width: 100%;
-            }
-            .unit-selector-list {
-                width: 100%;
-            }
-             .ad-box-container {
-                margin-top: 15px; /* Reduce top margin on mobile */
+            /* Adjust top ad banner padding to account for smaller header */
+            #top-ad-banner-container {
+                padding: 60px 10px 15px 10px;
             }
         }
     </style>
@@ -357,6 +370,18 @@
         <div style="width: 28px; height: 1px;"></div> 
 
     </header>
+    
+    <!-- SINGLE TOP ADVERTISEMENT BANNER -->
+    <div id="top-ad-banner-container">
+        <div class="ad-box">
+            <p class="ad-text">
+                [여기에 하나의 큰 상단 광고 배너가 표시됩니다.]
+                <br>
+                <span style="font-size: 11px; color: #9CA3AF;">광고 ID: Top Leaderboard Banner Slot</span>
+            </p>
+        </div>
+    </div>
+
 
     <!-- Main content (Two-Column Layout) -->
     <div class="main-content">
@@ -397,8 +422,12 @@
                     </div>
                 </div>
             </div>
+            
         </div>
         
+        <!-- VERTICAL SEPARATOR for Desktop -->
+        <div class="separator-line"></div> 
+
         <!-- RIGHT COLUMN: Formula & Rate Display (formula-card) -->
         <div class="formula-card">
             <!-- 1. Formula Display and Toggle -->
@@ -422,18 +451,6 @@
                 </div>
             </div>
             
-            <!-- 3. Advertisement Placeholder -->
-            <div id="ad-placeholder" class="ad-box-container">
-                <h4 style="font-size:14px; font-weight:600; color:#6B7280; margin-bottom: 8px;">Advertisement</h4>
-                <div class="ad-box">
-                    <!-- Replace this content with actual ad script (e.g., Google AdSense) -->
-                    <p class="ad-text">
-                        [여기에 광고 배너가 표시됩니다.]
-                        <br>
-                        <span style="font-size: 11px; color: #9CA3AF;">광고 ID: 728x90 Banner Slot</span>
-                    </p>
-                </div>
-            </div>
         </div>
 
     </div>
@@ -734,6 +751,42 @@
         }
 
         /**
+         * Helper function to format a number cleanly, removing trailing zeros/decimal point,
+         * while keeping high precision and using scientific notation for extreme values.
+         * @param {number} num - The number to format.
+         * @param {number} fixedPrecision - Max fixed decimal places (e.g., 10 for rate, 6 for output).
+         * @param {number} expPrecision - Max decimal places for exponential notation.
+         * @returns {string} The formatted number string.
+         */
+        function formatNumber(num, fixedPrecision = 10, expPrecision = 6) {
+            if (num === 0) return '0';
+            
+            // Use scientific notation for extremely large or extremely small numbers
+            if (Math.abs(num) >= 1e12 || Math.abs(num) <= 1e-12) {
+                return num.toExponential(expPrecision);
+            }
+            
+            // Use scientific notation for large/small numbers that benefit from it (e.g., 1,000,000 to 1e+6)
+            if (Math.abs(num) >= 1e6 || Math.abs(num) < 1e-4) {
+                return num.toExponential(expPrecision - 2); 
+            }
+
+            // Use high fixed precision and strip unnecessary zeros/decimal point for clean display
+            // toFixed(X) ensures the number of decimal places is controlled up to X
+            let formatted = num.toFixed(fixedPrecision).replace(/(\.0+|0+)$/, ''); 
+            
+            // If it ends with a dot after stripping zeros, remove the dot too (e.g., "1.")
+            if (formatted.endsWith('.')) {
+                formatted = formatted.slice(0, -1);
+            }
+            
+            // Fallback for unexpected cases
+            if (formatted === "" || formatted === "-") return num.toString();
+
+            return formatted;
+        }
+
+        /**
          * Converts the length unit and displays the result and the 1-unit rate.
          */
         function convert() {
@@ -743,7 +796,7 @@
 
             // Input validation
             if (isNaN(inputVal) || inputVal < 0) {
-                outputValue.value = '0.0000';
+                outputValue.value = '0';
                 formulaDisplay.innerHTML = '$$ \\text{Enter a valid input value.} $$';
                 conversionRateText.textContent = `1 ${fromUnitKey} = 0 ${toUnitKey}`;
                 return;
@@ -756,35 +809,13 @@
             const conversionRate = fromFactor / toFactor;
             const outputResult = inputVal * conversionRate;
 
-            // --- 1. Display Result ---
-            if (outputResult === 0) {
-                outputValue.value = '0';
-            } else if (Math.abs(outputResult) >= 1e12 || Math.abs(outputResult) <= 1e-12) {
-                // Very large or very small numbers
-                outputValue.value = outputResult.toExponential(6);
-            } else if (Math.abs(outputResult) >= 1e6 || Math.abs(outputResult) < 1e-4) {
-                // Mid-range large/small numbers
-                outputValue.value = outputResult.toExponential(4);
-            } else {
-                // General numbers
-                outputValue.value = outputResult.toFixed(4);
-            }
+            // --- 1. Display Result (using clean formatter) ---
+            // Use slightly lower precision (6 fixed) for the main output result.
+            outputValue.value = formatNumber(outputResult, 6, 6);
 
-            // --- 2. Update 1-Unit Conversion Rate ---
-            let formattedRate;
-            
-            if (conversionRate === 1) {
-                formattedRate = '1';
-            } else if (Math.abs(conversionRate) >= 1e12 || Math.abs(conversionRate) <= 1e-12) {
-                formattedRate = conversionRate.toExponential(10); 
-            } else if (Math.abs(conversionRate) >= 1e6 || Math.abs(conversionRate) < 1e-4) {
-                formattedRate = conversionRate.toExponential(8); 
-            } else {
-                // Use maximum possible fixed precision for the rate display and clean trailing zeros
-                formattedRate = conversionRate.toFixed(10).replace(/(\.0+|0+)$/, ''); 
-                if (formattedRate.endsWith('.')) formattedRate = formattedRate.slice(0, -1);
-            }
-
+            // --- 2. Update 1-Unit Conversion Rate (using clean formatter) ---
+            // Use higher precision (12 fixed) for the rate for accuracy.
+            const formattedRate = formatNumber(conversionRate, 12, 10);
             conversionRateText.textContent = `1 ${fromUnitKey} = ${formattedRate} ${toUnitKey}`;
 
 
